@@ -7,15 +7,16 @@ public class ProxyRequest {
         String url = "http://fanyi.baidu.com/#en/zh/operate";
         //获取代理IP的URL
         String proxyUrl = "http://www.66ip.cn/nmtq.php?getnum=300&isp=0&anonymoustype=0&start=&ports=&export=&ipaddress=&area=0&proxytype=2&api=66ip";
-
+        //设定IP文件存储路径
+        String filePath = "F:\\me\\proxy-ip\\proxyip";
 //        //开启定时任务
 //        ClearTimeTask task = new ClearTimeTask();
 //        task.clear();
 
-        visit(url, proxyUrl);
+        visit(url, proxyUrl,filePath);
     }
 
-    public static void visit(String url, String proxyUrl) {
+    public static void visit(String url, String proxyUrl,String filePath) {
         String oriProxyUrl = proxyUrl;
         List<ProxyIP> ipList = ProxyGetUtil.getProxyIP(proxyUrl);
         RecordValidProxy recordValidProxy = new RecordValidProxy();
@@ -41,7 +42,7 @@ public class ProxyRequest {
                         count++;
                         System.out.println("成功访问次数: " + count);
                         System.out.println("代理IP：" + proxyIP.getAddress() + "   端口：" + proxyIP.getPort());
-                        recordValidProxy.record(proxyIP);
+                        recordValidProxy.record(proxyIP,filePath);
                     }else {
                         System.out.println("代理GET请求发送异常！");
                         System.out.println("代理IP：" + proxyIP.getAddress() + "   端口：" + proxyIP.getPort());

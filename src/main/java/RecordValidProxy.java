@@ -22,7 +22,7 @@ public class RecordValidProxy {
         proxysClear = new HashSet<String>();
     }
 
-    public void record(ProxyIP ip) {
+    public void record(ProxyIP ip, final String path) {
         String proxyIP = ip.getAddress() + ":" + ip.getPort();
         System.out.println("proxysSet :"+proxysSet.size());
         if (proxysSet.size() >= length) {
@@ -34,7 +34,7 @@ public class RecordValidProxy {
                 new Thread() {
                     public void run() {
                         System.out.println("*********************开始写IP*********************");
-                        write(proxysClear,"F:\\me\\proxy-ip\\proxyip\\"+new SimpleDateFormat("yyyyMMdd").format(new Date()));
+                        write(proxysClear,path+"\\"+new SimpleDateFormat("yyyyMMdd").format(new Date()));
                         proxysClear.clear();
                         clear = 0;
                         System.out.println("*********************结束写IP*********************");
