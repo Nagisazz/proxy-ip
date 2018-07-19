@@ -9,9 +9,10 @@ public class ProxyRequest {
         String proxyUrl = "http://www.66ip.cn/nmtq.php?getnum=300&isp=0&anonymoustype=0&start=&ports=&export=&ipaddress=&area=0&proxytype=2&api=66ip";
         //设定IP文件存储路径
         String filePath = "F:\\me\\proxy-ip\\proxyip";
-//        //开启定时任务
-//        ClearTimeTask task = new ClearTimeTask();
-//        task.clear();
+
+        //开启定时任务
+        ClearTimeTask task = new ClearTimeTask(filePath);
+        task.clear();
 
         visit(url, proxyUrl,filePath);
     }
@@ -28,7 +29,7 @@ public class ProxyRequest {
         //访问成功次数
         int count = 0;
 
-        for (int i = 1; i < loop; i++) {
+        for (int i = 1; ; i++) {
 
             System.out.println("--------第" + i + "批代理IP访问开始--------\n");
 
