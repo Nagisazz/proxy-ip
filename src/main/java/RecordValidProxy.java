@@ -24,7 +24,7 @@ public class RecordValidProxy {
 
     public void record(ProxyIP ip, final String path) {
         String proxyIP = ip.getAddress() + ":" + ip.getPort();
-        System.out.println("proxysSet :"+proxysSet.size());
+        ProxyRequest.logger.info("proxysSet :"+proxysSet.size());
         if (proxysSet.size() >= length) {
             proxysClear.addAll(proxysSet);
             proxysSet.clear();
@@ -33,11 +33,11 @@ public class RecordValidProxy {
                 clear = 1;
                 new Thread() {
                     public void run() {
-                        System.out.println("*********************开始写IP*********************");
-                        write(proxysClear,path+"\\"+new SimpleDateFormat("yyyyMMdd").format(new Date()));
+                        ProxyRequest.logger.info("*********************开始写IP*********************");
+                        write(proxysClear,path+"/"+new SimpleDateFormat("yyyyMMdd").format(new Date()));
                         proxysClear.clear();
                         clear = 0;
-                        System.out.println("*********************结束写IP*********************");
+                        ProxyRequest.logger.info("*********************结束写IP*********************");
                     }
                 }.start();
             }

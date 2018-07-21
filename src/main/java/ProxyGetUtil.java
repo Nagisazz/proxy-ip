@@ -34,7 +34,7 @@ public class ProxyGetUtil {
 
             //循环遍历得到的IP地址集合
             for (final String ip : ips) {
-                System.out.println(ip);
+                ProxyRequest.logger.info(ip);
                 ProxyIP proxyIP = new ProxyIP();
                 String[] temp = ip.split(":");
                 proxyIP.setAddress(temp[0].trim());
@@ -42,10 +42,10 @@ public class ProxyGetUtil {
                 ipList.add(proxyIP);
             }
         } catch (IOException e) {
-            System.out.println("URL加载失败！");
+            ProxyRequest.logger.info("URL加载失败！");
         }
 
-        System.out.println("一共有："+ipList.size()+"个IP");
+        ProxyRequest.logger.info("一共有："+ipList.size()+"个IP");
         return ipList;
     }
 

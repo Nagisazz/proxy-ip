@@ -50,7 +50,7 @@ public class ClearTimeTask {
     }
 
     private void operateProxyIP(String filePath) {
-        System.out.println("********************开始清除无用数据********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        ProxyRequest.logger.info("********************开始清除无用数据********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         List<File> files = getFiles(filePath, new ArrayList<File>());
         OperateProxyIPTask operateProxyIPTask = new OperateProxyIPTask();
         CountDownLatch countDownLatch = new CountDownLatch(files.size());
@@ -59,7 +59,7 @@ public class ClearTimeTask {
         }
         try {
             countDownLatch.await();
-            System.out.println("********************清除无用数据完成********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            ProxyRequest.logger.info("********************清除无用数据完成********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         } catch (InterruptedException e) {
         }
     }
