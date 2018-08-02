@@ -21,9 +21,9 @@ public class ProxyGetUtil {
             //正则匹配拿到IP地址集合
             ipList = new ArrayList<ProxyIP>();
             List<String> ips = new ArrayList<String>();
-            String lines[] = ipStr.split("\r\n");
+            String lines[] = ipStr.split(" ");
             for (int i = 0; i < lines.length; i++) {
-                Pattern ipreg = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{2,5}");
+                Pattern ipreg = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}");
 
                 Matcher ip = ipreg.matcher(lines[i]);
                 while (ip.find()) {

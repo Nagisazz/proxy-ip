@@ -137,6 +137,10 @@ public class HttpRequestUtil {
         return result;
     }
 
+//    public static void main(String[] args) {
+//        System.out.println(sendProxyGet("109.197.184.81",8080,"https://h5.ele.me/hongbao/#hardware_id=&is_lucky_group=True&lucky_number=6&track_id=&platform=4&sn=2a00244d8632b85b&theme_id=2841&device_id=&refer_user_id=1",""));
+//    }
+
     /**
      * 运用代理向指定URL发送GET请求
      *
@@ -173,11 +177,11 @@ public class HttpRequestUtil {
             //进行连接
             connection.connect();
 
-//            //遍历输出所有响应头字段
-//            Map<String, List<String>> map = connection.getHeaderFields();
-//            for (String key : map.keySet()) {
-//                System.out.println(key + "-------" + map.get(key));
-//            }
+            //遍历输出所有响应头字段
+            Map<String, List<String>> map = connection.getHeaderFields();
+            for (String key : map.keySet()) {
+                System.out.println(key + "-------" + map.get(key));
+            }
 
             //输出URL响应
             String line;
