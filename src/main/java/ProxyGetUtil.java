@@ -41,11 +41,12 @@ public class ProxyGetUtil {
                 proxyIP.setPort(temp[1].trim());
                 ipList.add(proxyIP);
             }
+            ProxyRequest.logger.info("一共有："+ipList.size()+"个IP");
         } catch (IOException e) {
+            ipList = new ArrayList<ProxyIP>();
             ProxyRequest.logger.info("URL加载失败！");
         }
 
-        ProxyRequest.logger.info("一共有："+ipList.size()+"个IP");
         return ipList;
     }
 
