@@ -217,7 +217,7 @@ public class HttpRequestUtil {
      * @param param   请求参数
      * @return        返回的结果
      */
-    public static String sendPost(String address, int port,String url, String param) {
+    public static String sendProxyPost(String address, int port,String url, String param) {
         String result = "";
         BufferedReader in = null;
         OutputStream outputStream = null;
