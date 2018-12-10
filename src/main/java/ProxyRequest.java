@@ -9,25 +9,17 @@ public class ProxyRequest {
     public static final Logger logger = LoggerFactory.getLogger(ProxyRequest.class);
 
     public static void main(String[] args) {
-
-
-        //要访问的URL
-        String url = "http://fanyi.baidu.com/#en/zh/operate";
-        //获取代理IP的URL
-        String proxyUrl = "http://www.66ip.cn/nmtq.php?getnum=300&isp=0&anonymoustype=0&start=&ports=&export=&ipaddress=&area=0&proxytype=2&api=66ip";
-        //设定IP文件存储路径
-        String filePath = "/data/proxy-ip/proxyip";
         //创建目录
-        File file = new File(filePath);
+        File file = new File(Constant.filePath);
         if (!file.exists()){
             file.mkdirs();
         }
 
         //开启定时任务
-        ClearTimeTask task = new ClearTimeTask(filePath);
+        ClearTimeTask task = new ClearTimeTask(Constant.filePath);
         task.clear();
 
-        visit(url, proxyUrl,filePath);
+        visit(Constant.url, Constant.proxyUrl,Constant.filePath);
     }
 
     public static void visit(String url, String proxyUrl,String filePath) {
