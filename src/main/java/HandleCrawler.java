@@ -5,67 +5,90 @@ import org.apache.http.util.EntityUtils;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HandleCrawler {
 
-    public static void setCookie() throws IOException, ScriptException {
-        CloseableHttpResponse response = ApacheHttpUtil.sendGet(Constant.proxyUrl);
-        if(response.getStatusLine().getStatusCode()==521) {
-            String yd_cookie = getYdCookie(response.getAllHeaders());
-            ProxyRequest.logger.info("yd_cookie is :"+yd_cookie);
+    public static void setCookie() {
+        try {
+            CloseableHttpResponse response = ApacheHttpUtil.sendGet(Constant.proxyUrl);
+            if (response.getStatusLine().getStatusCode() == 521) {
+                String jsluidCookie = getJsluidCookie(response.getAllHeaders());
+                ProxyRequest.logger.info("jsluidCookie is :" + jsluidCookie);
 
-            HttpEntity entity = response.getEntity();
-            String html=EntityUtils.toString(entity,"utf-8");
-            String runString = getRunString(html);
-            String fuction = html.substring(html.indexOf("function")).replace("</script> </body></html>",runString+";").replace("eval(\"qo=eval;qo(po);\")","return po");
-            ProxyRequest.logger.info("fuction is :"+fuction);
+                HttpEntity entity = response.getEntity();
+                String html = EntityUtils.toString(entity, "utf-8");
+//                String runString = getRunString(html);
+//                String function = html.substring(html.indexOf("function")).replace("</script> </body></html>", runString + ";").replace("eval(\"qo=eval;qo(po);\")", "return po");
+                String functionFirst = handleFirst(html);
+                functionFirst = functionFirst.substring(0, functionFirst.indexOf("qq();")) + "qq();";
+                ProxyRequest.logger.info("functionFirst is :" + functionFirst);
 
-            ScriptEngineManager m = new ScriptEngineManager(); //获取JavaScript执行引擎
-            ScriptEngine engine = m.getEngineByName("JavaScript"); //执行JavaScript代码
-            String origin = (String) engine.eval(fuction);
-            ProxyRequest.logger.info("origin ydclearance is :"+origin);
-            String ydclearance = getYdclearance(origin);
-            ProxyRequest.logger.info("ydclearance is :"+ydclearance);
+                ScriptEngineManager m = new ScriptEngineManager(); //获取JavaScript执行引擎
+                ScriptEngine engine = m.getEngineByName("JavaScript"); //执行JavaScript代码
+                String origin = (String) engine.eval(functionFirst);
 
-            Constant.COOKIE = "yd_cookie="+yd_cookie+"; _ydclearance="+ydclearance;
+                String secondName = origin.substring(4, origin.indexOf("="));
+                String functionSecond = handleSecond(origin, secondName);
+                ProxyRequest.logger.info("functionSecond is :" + functionSecond);
+                String real = (String) engine.eval(functionSecond);
+                String jslclearance = getJslclearance(real);
+                ProxyRequest.logger.info("jslclearance is :" + jslclearance);
+
+                Constant.COOKIE = "__jsluid=" + jsluidCookie + "; __jsl_clearance=" + jslclearance;
+            }
+        } catch (Exception e) {
+            ProxyRequest.logger.error("获取Cookie失败", e);
         }
     }
 
-    private static String getYdCookie(Header[] headers){
-        String yd_cookie = null;
-        for(Header header:headers){
-            if (header.getName().equals("Set-Cookie")){
-                yd_cookie = header.getValue();
+    private static String getJsluidCookie(Header[] headers) {
+        String jsluidCookie = null;
+        for (Header header : headers) {
+            if (header.getName().equals("Set-Cookie")) {
+                jsluidCookie = header.getValue();
             }
         }
-        Pattern pattern = Pattern.compile("(?<=yd_cookie=).+?(?=; Expires=)");
-        Matcher matcher = pattern.matcher(yd_cookie);
-        while (matcher.find()){
-            yd_cookie = matcher.group(0);
+        Pattern pattern = Pattern.compile("(?<=__jsluid=).+?(?=; max-age=)");
+        Matcher matcher = pattern.matcher(jsluidCookie);
+        while (matcher.find()) {
+            jsluidCookie = matcher.group(0);
         }
-        return yd_cookie;
+        return jsluidCookie;
     }
 
-    private static String getYdclearance(String origin){
-        String ydclearance = null;
-        Pattern pattern = Pattern.compile("(?<=_ydclearance=).+?(?=; expires=)");
-        Matcher matcher = pattern.matcher(origin);
-        while (matcher.find()){
-            ydclearance = matcher.group(0);
-        }
-        return ydclearance;
-    }
-
-    private static String getRunString(String html){
+    private static String getRunString(String html) {
         Pattern pattern = Pattern.compile("(?<=window.onload=setTimeout\\(\").+?(?=\", 200\\))");
         Matcher matcher = pattern.matcher(html);
-        while (matcher.find()){
+        while (matcher.find()) {
             return matcher.group(0);
         }
         return null;
+    }
+
+    private static String handleFirst(String html) {
+        String handleFirst = html.replace("eval(y.replace(/\\b\\w+\\b/g, function(y){return x[f(y,z)-1]||(\"_\"+y)}));break}catch(_){}", "function aa(){return y.replace(/\\b\\w+\\b/g, function(y){return x[f(y,z)-1]||(\"_\"+y)});}break}catch(_){}return aa();}qq();");
+        String function = handleFirst.replace("<script>", "").replace("</script>", "");
+        return "function qq(){" + function;
+    }
+
+    private static String handleSecond(String html, String name) {
+        return html.replace("setTimeout('location.href=location.pathname+location.search.replace(/[\\?|&]captcha-challenge/,\\'\\')',1500);document.cookie=", "return ")
+                .replace(";if((function(){try{return !!window.addEventListener;}catch(e){return false;}})()){document.addEventListener('DOMContentLoaded'," + name + ",false)}else{document.attachEvent('onreadystatechange'," + name + ")}", ";" + name + "();")
+                .replace("(window.headless+[]+[[]][0]).charAt(8)", "'d'")
+                .replace("window['__p'+'hantom'+'as']", "'f'")
+                .replace("(window['callP'+'hantom']+[]+[[]][0]).charAt(-~[-~[-~~~!{}+((+!-{})<<(+!-{}))+((+!-{})<<(+!-{}))]])", "'e'")
+                .replace("(window['callP'+'hantom']+[]).charAt(~~[])", "'u'");
+    }
+
+    private static String getJslclearance(String real) {
+        String jslclearance = null;
+        Pattern pattern = Pattern.compile("(?<=__jsl_clearance=).+?(?=;Expires=)");
+        Matcher matcher = pattern.matcher(real);
+        while (matcher.find()) {
+            jslclearance = matcher.group(0);
+        }
+        return jslclearance;
     }
 }
