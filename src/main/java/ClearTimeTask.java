@@ -26,15 +26,22 @@ public class ClearTimeTask {
         scheduExec.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 operateProxyIP(filePath);
+                if (isFirstMonth()) {
+                    mergeFiles(filePath);
+                }
             }
         }, initDelay, oneDay, TimeUnit.MILLISECONDS);
     }
 
-//    public static void main(String[] args) {
+//    public static void main(String[] args) throws ParseException {
 //
-////        File file = new File("F:\\me\\proxy-ip\\proxyip\\ip");
-////        System.out.println(file.getPath());
-////        System.out.println(file.getAbsolutePath());
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(2019, 1, 2);
+//        calendar.add(Calendar.MONTH, -1);
+//        System.out.println(calendar.get(Calendar.MONTH) + 1);
+//        System.out.println(calendar.getTime());
+//        System.out.println(calendar.get(Calendar.YEAR));
+//
 //    }
 
     private long getTimeMillis(String time) {
@@ -49,13 +56,31 @@ public class ClearTimeTask {
         return 0;
     }
 
+    private Boolean isFirstMonth() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_MONTH) == 1;
+    }
+
+    private void mergeFiles(String filePath) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        String prefix = String.valueOf(year + month);
+
+        ProxyRequest.logger.info("********************开始合并 " + year + " 年 " + month + " 月数据********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        List<File> files = getPrefixFiles(filePath, prefix, new ArrayList<File>());
+        MergeFiles.handle(files, prefix);
+        ProxyRequest.logger.info("********************结束合并 " + year + " 年 " + month + " 月数据********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+    }
+
     private void operateProxyIP(String filePath) {
         ProxyRequest.logger.info("********************开始清除无用数据********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         List<File> files = getFiles(filePath, new ArrayList<File>());
         OperateProxyIPTask operateProxyIPTask = new OperateProxyIPTask();
         CountDownLatch countDownLatch = new CountDownLatch(files.size());
         for (File file : files) {
-            operateProxyIPTask.start(file,countDownLatch);
+            operateProxyIPTask.start(file, countDownLatch);
         }
         try {
             countDownLatch.await();
@@ -67,12 +92,29 @@ public class ClearTimeTask {
     private List<File> getFiles(String realpath, List<File> files) {
         File fileDir = new File(realpath);
         if (fileDir.isDirectory()) {
-            File[] subfiles = fileDir.listFiles();
-            for (File file : subfiles) {
+            File[] subFiles = fileDir.listFiles();
+            for (File file : subFiles) {
                 if (file.isDirectory()) {
                     getFiles(file.getAbsolutePath(), files);
                 } else {
                     if (file.lastModified() < getTimeMillis("00:00:00")) {
+                        files.add(file);
+                    }
+                }
+            }
+        }
+        return files;
+    }
+
+    private List<File> getPrefixFiles(String realpath, String prefix, List<File> files) {
+        File fileDir = new File(realpath);
+        if (fileDir.isDirectory()) {
+            File[] subFiles = fileDir.listFiles();
+            for (File file : subFiles) {
+                if (file.isDirectory()) {
+                    getFiles(file.getAbsolutePath(), files);
+                } else {
+                    if (file.lastModified() < getTimeMillis("00:00:00") && file.getName().startsWith(prefix)) {
                         files.add(file);
                     }
                 }
