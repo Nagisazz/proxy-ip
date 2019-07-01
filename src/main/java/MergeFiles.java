@@ -7,14 +7,25 @@ public class MergeFiles {
 
     public static void handle(List<File> files, String name) {
         Set<String> ipList = removeDup(files);
-        RecordValidProxy.write(ipList, name);
+        removePrefix(name);
+        RecordValidProxy.write(ipList, Constant.filePath + "/" + name);
+    }
+
+    private static void removePrefix(String name) {
+        File fileDir = new File(Constant.filePath);
+        File[] subFiles = fileDir.listFiles();
+        for (File file : subFiles) {
+            if (file.getName().startsWith(name)) {
+                file.delete();
+            }
+        }
     }
 
     private static Set<String> removeDup(List<File> files) {
-        BufferedReader reader = null;
         Set<String> ipList = new HashSet<String>();
-        try {
-            for (File file : files) {
+        for (File file : files) {
+            BufferedReader reader = null;
+            try {
                 reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
                 String ip = null;
                 while ((ip = reader.readLine()) != null) {
@@ -22,16 +33,16 @@ public class MergeFiles {
                         ipList.add(ip);
                     }
                 }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                reader.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return ipList;
