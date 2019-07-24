@@ -37,7 +37,7 @@ public class HandleCrawler {
                     String jslclearance = getJslclearance(real);
                     ProxyRequest.logger.info("jslclearance is :" + jslclearance);
 
-                    Constant.COOKIE = "__jsluid=" + jsluidCookie + "; __jsl_clearance=" + jslclearance;
+                    Constant.COOKIE = "__jsluid_h=" + jsluidCookie + "; __jsl_clearance=" + jslclearance;
                 }
             }
         } catch (Exception e) {
@@ -50,9 +50,10 @@ public class HandleCrawler {
         for (Header header : headers) {
             if (header.getName().equals("Set-Cookie")) {
                 jsluidCookie = header.getValue();
+                break;
             }
         }
-        Pattern pattern = Pattern.compile("(?<=__jsluid=).+?(?=; max-age=)");
+        Pattern pattern = Pattern.compile("(?<=__jsluid_h=).+?(?=; max-age=)");
         Matcher matcher = pattern.matcher(jsluidCookie);
         while (matcher.find()) {
             jsluidCookie = matcher.group(0);
