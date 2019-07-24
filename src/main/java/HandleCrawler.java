@@ -38,6 +38,8 @@ public class HandleCrawler {
                     ProxyRequest.logger.info("jslclearance is :" + jslclearance);
 
                     Constant.COOKIE = "__jsluid_h=" + jsluidCookie + "; __jsl_clearance=" + jslclearance;
+                } else {
+                    Thread.sleep(1000);
                 }
             }
         } catch (Exception e) {
