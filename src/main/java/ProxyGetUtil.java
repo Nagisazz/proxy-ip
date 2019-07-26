@@ -44,11 +44,12 @@ public class ProxyGetUtil {
             ProxyRequest.logger.info("一共有："+ipList.size()+"个IP");
         } catch (IOException e) {
             ipList = new ArrayList<ProxyIP>();
-            try {
-                HandleCrawler.setCookie();
-            } catch (Exception e1) {
-                ProxyRequest.logger.info("Cookie加载失败！");
-            }
+//            try {
+//                //改变了目标地址，不需要进行此操作
+//                HandleCrawler.setCookie();
+//            } catch (Exception e1) {
+//                ProxyRequest.logger.info("Cookie加载失败！");
+//            }
             ProxyRequest.logger.info("URL加载失败！");
         }
 
@@ -59,7 +60,7 @@ public class ProxyGetUtil {
         return Jsoup.connect(url)
                 .header("accept", "*/*")
                 .header("connection", "Keep-Alive")
-                .header("Cookie", Constant.COOKIE)
+//                .header("Cookie", Constant.COOKIE)
                 .header("user-agent",
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0")
                 .timeout(3000)

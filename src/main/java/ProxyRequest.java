@@ -11,7 +11,7 @@ public class ProxyRequest {
     public static void main(String[] args) {
         //创建目录
         File file = new File(Constant.filePath);
-        if (!file.exists()){
+        if (!file.exists()) {
             file.mkdirs();
         }
 
@@ -19,25 +19,21 @@ public class ProxyRequest {
         ClearTimeTask task = new ClearTimeTask(Constant.filePath);
         task.clear();
 
-        visit(Constant.url, Constant.proxyUrl,Constant.filePath);
+        visit(Constant.url, Constant.proxyUrl, Constant.filePath);
     }
 
-    public static void visit(String url, String proxyUrl,String filePath) {
+    public static void visit(String url, String proxyUrl, String filePath) {
         String oriProxyUrl = proxyUrl;
         List<ProxyIP> ipList = ProxyGetUtil.getProxyIP(proxyUrl);
         RecordValidProxy recordValidProxy = new RecordValidProxy();
 
-        //代理IP访问次数
-        int loop = 500;
         //当前访问总次数
         int now = 0;
         //访问成功次数
         int count = 0;
 
         for (int i = 1; ; i++) {
-
             logger.info("--------第" + i + "批代理IP访问开始--------\n");
-
             for (ProxyIP proxyIP : ipList) {
                 now++;
                 logger.info("现在是第 " + now + " 次访问");
@@ -48,19 +44,23 @@ public class ProxyRequest {
                         count++;
                         logger.info("成功访问次数: " + count);
                         logger.info("代理IP：" + proxyIP.getAddress() + "   端口：" + proxyIP.getPort());
-                        recordValidProxy.record(proxyIP,filePath);
-                    }else {
+                        recordValidProxy.record(proxyIP, filePath);
+                    } else {
                         logger.info("代理GET请求发送异常！");
                         logger.info("代理IP：" + proxyIP.getAddress() + "   端口：" + proxyIP.getPort());
                     }
-                }catch (Exception e){
-
+                } catch (Exception e) {
                 }
                 logger.info("--------本次访问结束--------\n");
+            }
+            logger.info("--------第" + i + "批代理IP访问结束--------\n");
 
+            //一个小时获取一次
+            try {
+                Thread.sleep(1000 * 60 * 60);
+            } catch (InterruptedException e) {
             }
 
-            logger.info("--------第" + i + "批代理IP访问结束--------\n");
             ipList = ProxyGetUtil.getProxyIP(proxyUrl);
         }
     }
