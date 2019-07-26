@@ -55,9 +55,9 @@ public class ProxyRequest {
             }
             logger.info("--------第" + i + "批代理IP访问结束--------\n");
 
-            //一个小时获取一次
+            //30分钟获取一次
             try {
-                Thread.sleep(1000 * 60 * 60);
+                Thread.sleep(1000 * 60 * 30);
             } catch (InterruptedException e) {
             }
 
