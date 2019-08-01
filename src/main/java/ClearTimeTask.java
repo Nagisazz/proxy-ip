@@ -66,7 +66,12 @@ public class ClearTimeTask {
         calendar.add(Calendar.MONTH, -1);
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
-        String prefix = String.valueOf(year + month);
+        String prefix;
+        if (month < 10) {
+            prefix = year + "0" + month;
+        } else {
+            prefix = year + "" + month;
+        }
 
         ProxyRequest.logger.info("********************开始合并 " + year + " 年 " + month + " 月数据********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         List<File> files = getPrefixFiles(filePath, prefix, new ArrayList<File>());
@@ -112,7 +117,7 @@ public class ClearTimeTask {
             File[] subFiles = fileDir.listFiles();
             for (File file : subFiles) {
                 if (file.isDirectory()) {
-                    getFiles(file.getAbsolutePath(), files);
+                    getPrefixFiles(file.getAbsolutePath(), prefix, files);
                 } else {
                     if (file.lastModified() < getTimeMillis("00:00:00") && file.getName().startsWith(prefix)) {
                         files.add(file);
