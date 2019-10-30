@@ -33,6 +33,10 @@ public class ClearTimeTask {
         }, initDelay, oneDay, TimeUnit.MILLISECONDS);
     }
 
+    private void Test(){
+        System.out.println("1212xc");
+    }
+
 //    public static void main(String[] args) throws ParseException {
 //
 //        Calendar calendar = Calendar.getInstance();
