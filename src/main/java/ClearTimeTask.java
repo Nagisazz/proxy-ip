@@ -25,16 +25,13 @@ public class ClearTimeTask {
 
         scheduExec.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                operateProxyIP(filePath);
                 if (isFirstMonth()) {
                     mergeFiles(filePath);
+                }else {
+                    operateProxyIP(filePath);
                 }
             }
         }, initDelay, oneDay, TimeUnit.MILLISECONDS);
-    }
-
-    private void Test(){
-        System.out.println("1212xc");
     }
 
 //    public static void main(String[] args) throws ParseException {
@@ -123,7 +120,7 @@ public class ClearTimeTask {
                 if (file.isDirectory()) {
                     getPrefixFiles(file.getAbsolutePath(), prefix, files);
                 } else {
-                    if (file.lastModified() < getTimeMillis("00:00:00") && file.getName().startsWith(prefix)) {
+                    if (file.getName().startsWith(prefix)) {
                         files.add(file);
                     }
                 }

@@ -6,8 +6,9 @@
 
     <groupId>Nagisazz</groupId>
     <artifactId>proxy-ip</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <build>
+        <finalName>proxy-ip</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
