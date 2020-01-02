@@ -1,4 +1,9 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,32 +16,12 @@ public class OperateProxyIPTask {
 
     private ExecutorService pool = Executors.newFixedThreadPool(3);
 
-    public void start(File file, CountDownLatch countDownLatch) {
-        pool.execute(new OperateThread(file, countDownLatch));
+    public void start(File file) {
+        pool.execute(new OperateThread(file));
     }
 
     public void stop() {
         pool.shutdown();
-    }
-
-    class OperateThread implements Runnable {
-        private File file;
-        private CountDownLatch countDownLatch;
-
-        public OperateThread(File file, CountDownLatch countDownLatch) {
-            this.file = file;
-            this.countDownLatch = countDownLatch;
-        }
-
-        public void run() {
-            Set<String> ipList = testValid(removeDup(file));
-            String fileName = file.getAbsolutePath();
-            if (file.exists()) {
-                file.delete();
-                RecordValidProxy.write(ipList, fileName);
-            }
-            countDownLatch.countDown();
-        }
     }
 
     private Set<String> removeDup(File file) {
@@ -90,5 +75,23 @@ public class OperateProxyIPTask {
             ipList.add(proxyIP);
         }
         return ipList;
+    }
+
+    class OperateThread implements Runnable {
+        private File file;
+
+        public OperateThread(File file) {
+            this.file = file;
+        }
+
+        public void run() {
+            Set<String> ipList = testValid(removeDup(file));
+            String fileName = file.getAbsolutePath();
+            if (file.exists()) {
+                file.delete();
+                RecordValidProxy recordValidProxy = new RecordValidProxy();
+                recordValidProxy.write(ipList, fileName);
+            }
+        }
     }
 }

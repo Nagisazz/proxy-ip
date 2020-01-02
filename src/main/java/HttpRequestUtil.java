@@ -180,7 +180,7 @@ public class HttpRequestUtil {
             //遍历输出所有响应头字段
             Map<String, List<String>> map = connection.getHeaderFields();
             for (String key : map.keySet()) {
-                System.out.println(key + "-------" + map.get(key));
+//                System.out.println(key + "-------" + map.get(key));
             }
 
             //输出URL响应

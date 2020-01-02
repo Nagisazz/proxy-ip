@@ -7,15 +7,15 @@ public class TestValidTask {
 
     private ExecutorService pool = Executors.newFixedThreadPool(10);
 
-    public void start(ProxyIP proxyIP, String url, String params, Set<String> validIP,CountDownLatch countDownLatch){
-        pool.execute(new TestValidThread(proxyIP,url,params,validIP,countDownLatch));
+    public void start(ProxyIP proxyIP, String url, String params, Set<String> validIP, CountDownLatch countDownLatch) {
+        pool.execute(new TestValidThread(proxyIP, url, params, validIP, countDownLatch));
     }
 
-    public void stop(){
+    public void stop() {
         pool.shutdown();
     }
 
-    class TestValidThread implements Runnable{
+    class TestValidThread implements Runnable {
 
         private ProxyIP proxyIP;
         private String url;
@@ -35,7 +35,10 @@ public class TestValidTask {
 //            System.out.println("当前线程为："+Thread.currentThread().getName());
             String result = HttpRequestUtil.sendProxyGet(proxyIP.getAddress(), Integer.parseInt(proxyIP.getPort()), url, "");
             if (!result.equals("false")) {
-                validIP.add(proxyIP.getAddress()+":"+proxyIP.getPort());
+                validIP.add(proxyIP.getAddress() + ":" + proxyIP.getPort());
+                ProxyRequest.logger.info("********************" + proxyIP.getAddress() + ":" + proxyIP.getPort() + "验证有效********************");
+            }else {
+                ProxyRequest.logger.info("********************" + proxyIP.getAddress() + ":" + proxyIP.getPort() + "验证！！！无效！！！********************");
             }
             countDownLatch.countDown();
         }

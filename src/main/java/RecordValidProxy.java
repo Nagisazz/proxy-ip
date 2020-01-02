@@ -22,31 +22,7 @@ public class RecordValidProxy {
         proxysClear = new HashSet<String>();
     }
 
-    public void record(ProxyIP ip, final String path) {
-        String proxyIP = ip.getAddress() + ":" + ip.getPort();
-        ProxyRequest.logger.info("proxysSet :"+proxysSet.size());
-        if (proxysSet.size() >= length) {
-            proxysClear.addAll(proxysSet);
-            proxysSet.clear();
-            proxysSet.add(proxyIP);
-            if (clear == 0) {
-                clear = 1;
-                new Thread() {
-                    public void run() {
-                        ProxyRequest.logger.info("*********************开始写IP*********************");
-                        write(proxysClear,path+"/"+new SimpleDateFormat("yyyyMMdd").format(new Date()));
-                        proxysClear.clear();
-                        clear = 0;
-                        ProxyRequest.logger.info("*********************结束写IP*********************");
-                    }
-                }.start();
-            }
-        } else {
-            proxysSet.add(proxyIP);
-        }
-    }
-
-    public static void write(Set<String> proxys,String fileName) {
+    public void write(Set<String> proxys, String fileName) {
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new OutputStreamWriter(
@@ -63,6 +39,30 @@ public class RecordValidProxy {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void record(ProxyIP ip, final String path) {
+        String proxyIP = ip.getAddress() + ":" + ip.getPort();
+        ProxyRequest.logger.info("proxysSet :" + proxysSet.size());
+        if (proxysSet.size() >= length) {
+            proxysClear.addAll(proxysSet);
+            proxysSet.clear();
+            proxysSet.add(proxyIP);
+            if (clear == 0) {
+                clear = 1;
+                new Thread() {
+                    public void run() {
+                        ProxyRequest.logger.info("*********************开始写IP*********************");
+                        write(proxysClear, path + "/" + new SimpleDateFormat("yyyyMMdd").format(new Date()));
+                        proxysClear.clear();
+                        clear = 0;
+                        ProxyRequest.logger.info("*********************结束写IP*********************");
+                    }
+                }.start();
+            }
+        } else {
+            proxysSet.add(proxyIP);
         }
     }
 }
