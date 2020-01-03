@@ -20,6 +20,16 @@ public class OperateProxyIPTask {
         pool.execute(new OperateThread(file));
     }
 
+    public void doNoTask(File file){
+        Set<String> ipList = testValid(removeDup(file));
+        String fileName = file.getAbsolutePath();
+        if (file.exists()) {
+            file.delete();
+            RecordValidProxy recordValidProxy = new RecordValidProxy();
+            recordValidProxy.write(ipList, fileName);
+        }
+    }
+
     public void stop() {
         pool.shutdown();
     }

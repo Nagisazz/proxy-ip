@@ -86,11 +86,11 @@ public class ClearTimeTask {
 //        CountDownLatch countDownLatch = new CountDownLatch(files.size());
         File file = new File(filePath + "/" + format);
 //        for (File file : files) {
-        operateProxyIPTask.start(file);
+        operateProxyIPTask.doNoTask(file);
 //        }
 //        try {
 //            countDownLatch.await();
-        ProxyRequest.logger.info("********************清除合并前一天（" + format + "）无用数据完成********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        ProxyRequest.logger.info("********************结束清除合并前一天（" + format + "）无用数据完成********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 //        } catch (InterruptedException e) {
 //        }
     }
