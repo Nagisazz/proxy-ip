@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 public class TestValidTask {
 
-    private ExecutorService pool = Executors.newFixedThreadPool(10);
+    private ExecutorService pool = Executors.newFixedThreadPool(30);
 
     public void start(ProxyIP proxyIP, String url, String params, Set<String> validIP, CountDownLatch countDownLatch) {
         pool.execute(new TestValidThread(proxyIP, url, params, validIP, countDownLatch));

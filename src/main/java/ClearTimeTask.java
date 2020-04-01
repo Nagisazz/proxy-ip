@@ -19,6 +19,23 @@ public class ClearTimeTask {
         this.scheduExec = Executors.newScheduledThreadPool(3);
     }
 
+    private static List<File> getPrefixFiles(String realpath, String prefix, List<File> files) {
+        File fileDir = new File(realpath);
+        if (fileDir.isDirectory()) {
+            File[] subFiles = fileDir.listFiles();
+            for (File file : subFiles) {
+                if (file.isDirectory()) {
+                    getPrefixFiles(file.getAbsolutePath(), prefix, files);
+                } else {
+                    if (file.getName().startsWith(prefix)) {
+                        files.add(file);
+                    }
+                }
+            }
+        }
+        return files;
+    }
+
     public void clear() {
 
         long oneDay = 24 * 60 * 60 * 1000;
@@ -50,7 +67,11 @@ public class ClearTimeTask {
 
     private Boolean isFirstMonth() {
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.DAY_OF_MONTH) == 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        ProxyRequest.logger.info("********************今天是" + year + "年" + month + "月" + day + "********************   现在时间为：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        return day == 1;
     }
 
     private void mergeFiles(String filePath) {
@@ -74,7 +95,7 @@ public class ClearTimeTask {
 
     private void operateProxyIP(String filePath) {
         //获取前一天日期
-        DateFormat df = new SimpleDateFormat("YYYYMMDD");
+        DateFormat df = new SimpleDateFormat("yyyyMMdd");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.DAY_OF_MONTH, -1);
@@ -104,23 +125,6 @@ public class ClearTimeTask {
                     getFiles(file.getAbsolutePath(), files);
                 } else {
                     if (file.lastModified() < getTimeMillis("00:00:00")) {
-                        files.add(file);
-                    }
-                }
-            }
-        }
-        return files;
-    }
-
-    private static List<File> getPrefixFiles(String realpath, String prefix, List<File> files) {
-        File fileDir = new File(realpath);
-        if (fileDir.isDirectory()) {
-            File[] subFiles = fileDir.listFiles();
-            for (File file : subFiles) {
-                if (file.isDirectory()) {
-                    getPrefixFiles(file.getAbsolutePath(), prefix, files);
-                } else {
-                    if (file.getName().startsWith(prefix)) {
                         files.add(file);
                     }
                 }
