@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nagisazz.proxyip.dao.ProxyIpLogExtendMapper">
+
+  <insert id="insertOrUpdateBatch">
+    <foreach collection="list" item="item" separator=";">
+      insert into t_proxy_ip_log (c_ip, n_number, dt_create_time,
+      dt_update_time, n_valid)
+      values
+        (#{item.ip,jdbcType=VARCHAR}, 1, #{item.createTime,jdbcType=TIMESTAMP},
+        #{item.updateTime,jdbcType=TIMESTAMP}, 1)
+      ON DUPLICATE KEY UPDATE
+        dt_update_time = #{item.updateTime,jdbcType=TIMESTAMP},
+        n_number = n_number + 1
+    </foreach>
+  </insert>
+
+  <select id="selectLastList" resultMap="com.nagisazz.proxyip.dao.base.ProxyIpLogMapper.BaseResultMap">
+    select
+    <include refid="com.nagisazz.proxyip.dao.base.ProxyIpLogMapper.Base_Column_List" />
+    from t_proxy_ip_log
+    where n_valid = 1 and date(dt_create_time) = date_sub(curdate(),interval 1 day)
+  </select>
+
+  <select id="selectSizeList" resultMap="com.nagisazz.proxyip.dao.base.ProxyIpLogMapper.BaseResultMap">
+    select
+    <include refid="com.nagisazz.proxyip.dao.base.ProxyIpLogMapper.Base_Column_List" />
+    from t_proxy_ip_log
+    where n_valid = 1
+    order by n_number desc
+    limit #{size,jdbcType=INTEGER}
+  </select>
+</mapper>

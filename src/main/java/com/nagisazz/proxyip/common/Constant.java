@@ -1,3 +1,5 @@
+package com.nagisazz.proxyip.common;
+
 public class Constant {
 
     //要访问的URL
@@ -8,6 +10,7 @@ public class Constant {
     public static final String proxyUrl = "http://www.89ip.cn/tqdl.html?api=1&num=5000&port=&address=&isp=";
     //设定IP文件存储路径
     public static final String filePath = "/data/proxy-ip/proxyip";
+
     //存储的Cookie
     public static String COOKIE = "";
 }

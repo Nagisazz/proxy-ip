@@ -1,7 +1,10 @@
+package com.nagisazz.proxyip.util;
+
 import java.io.*;
-import java.net.*;
-import java.util.List;
-import java.util.Map;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class HttpRequestUtil {
 
@@ -178,10 +181,10 @@ public class HttpRequestUtil {
             connection.connect();
 
             //遍历输出所有响应头字段
-            Map<String, List<String>> map = connection.getHeaderFields();
-            for (String key : map.keySet()) {
+//            Map<String, List<String>> map = connection.getHeaderFields();
+//            for (String key : map.keySet()) {
 //                System.out.println(key + "-------" + map.get(key));
-            }
+//            }
 
             //输出URL响应
             String line;

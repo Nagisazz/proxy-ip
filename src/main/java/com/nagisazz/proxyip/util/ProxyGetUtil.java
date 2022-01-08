@@ -1,3 +1,7 @@
+package com.nagisazz.proxyip.util;
+
+import com.nagisazz.proxyip.vo.ProxyIP;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -7,6 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class ProxyGetUtil {
 
     public static List<ProxyIP> getProxyIP(String url) {
@@ -34,23 +39,23 @@ public class ProxyGetUtil {
 
             //循环遍历得到的IP地址集合
             for (final String ip : ips) {
-                ProxyRequest.logger.info(ip);
+                log.info(ip);
                 ProxyIP proxyIP = new ProxyIP();
                 String[] temp = ip.split(":");
                 proxyIP.setAddress(temp[0].trim());
                 proxyIP.setPort(temp[1].trim());
                 ipList.add(proxyIP);
             }
-            ProxyRequest.logger.info("一共有："+ipList.size()+"个IP");
+            log.info("一共有："+ipList.size()+"个IP");
         } catch (IOException e) {
             ipList = new ArrayList<ProxyIP>();
 //            try {
 //                //改变了目标地址，不需要进行此操作
-//                HandleCrawler.setCookie();
+//                com.nagisazz.proxyip.util.HandleCrawler.setCookie();
 //            } catch (Exception e1) {
-//                ProxyRequest.logger.info("Cookie加载失败！");
+//                com.nagisazz.proxyip.util.log.info("Cookie加载失败！");
 //            }
-            ProxyRequest.logger.info("URL加载失败！");
+            log.info("URL加载失败！");
         }
 
         return ipList;
@@ -60,7 +65,7 @@ public class ProxyGetUtil {
         return Jsoup.connect(url)
                 .header("accept", "*/*")
                 .header("connection", "Keep-Alive")
-//                .header("Cookie", Constant.COOKIE)
+//                .header("Cookie", com.nagisazz.proxyip.common.Constant.COOKIE)
                 .header("user-agent",
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0")
                 .timeout(3000)
