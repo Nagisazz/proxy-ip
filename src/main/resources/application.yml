@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/proxyip?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:log4jdbc:mysql://127.0.0.1:3306/proxyip?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    driver-class-name: net.sf.log4jdbc.DriverSpy
     username: root
     password: 123456
     hikari:
@@ -14,7 +14,7 @@ server:
 
 logback:
   level:
-    #logback-spring.xml中的LOG_LEVEL_ROOT属性
+    #logback.xml中的LOG_LEVEL_ROOT属性
     root: info
-    #logback-spring.xml中的LOG_LEVEL_COMMON属性
+    #logback.xml中的LOG_LEVEL_COMMON属性
     common: info

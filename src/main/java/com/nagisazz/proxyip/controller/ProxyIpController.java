@@ -29,4 +29,10 @@ public class ProxyIpController {
     public void remove(@PathVariable String ip, @PathVariable String port) {
         proxyIpService.remove(ip + ":" + port);
     }
+
+//    @GetMapping("/test")
+//    public void test(){
+//        Set<String> strings = new HashSet<>(Collections.singletonList("1"));
+//        recordValidProxy.write(strings);
+//    }
 }
