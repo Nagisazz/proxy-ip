@@ -11,5 +11,5 @@ public interface ProxyIpLogExtendMapper extends ProxyIpLogMapper {
 
     List<ProxyIpLog> selectLastList();
 
-    void selectSizeList(Integer size);
+    List<ProxyIpLog> selectSizeList(Integer size);
 }

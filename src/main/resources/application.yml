@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:log4jdbc:mysql://127.0.0.1:3306/proxyip?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    driver-class-name: net.sf.log4jdbc.DriverSpy
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     username: root
     password: 123456
     hikari:

@@ -1,5 +1,6 @@
 package com.nagisazz.proxyip.controller;
 
+import com.nagisazz.proxyip.entity.ProxyIpLog;
 import com.nagisazz.proxyip.service.ProxyIpService;
 import com.nagisazz.proxyip.service.RecordValidProxy;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -21,8 +24,8 @@ public class ProxyIpController {
     private RecordValidProxy recordValidProxy;
 
     @GetMapping("/list/{size}")
-    public void list(@PathVariable Integer size) {
-        proxyIpService.selectSizeList(size);
+    public List<ProxyIpLog> list(@PathVariable Integer size) {
+        return proxyIpService.selectSizeList(size);
     }
 
     @GetMapping("/remove/{ip}/{port}")

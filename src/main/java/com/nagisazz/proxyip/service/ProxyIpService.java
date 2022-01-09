@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ProxyIpService {
@@ -13,9 +14,9 @@ public class ProxyIpService {
     @Autowired
     private ProxyIpLogExtendMapper proxyIpLogExtendMapper;
 
-    public void selectSizeList(Integer size) {
+    public List<ProxyIpLog> selectSizeList(Integer size) {
 
-        proxyIpLogExtendMapper.selectSizeList(size);
+        return proxyIpLogExtendMapper.selectSizeList(size);
     }
 
     public void remove(String ip) {

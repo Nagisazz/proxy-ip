@@ -65,17 +65,17 @@
 
     <!-- log4jdbc相关配置 BEGIN -->
     <!-- jdbc相关无用输出 -->
-    <logger name="jdbc.connection" level="off" />
-    <logger name="jdbc.audit" level="off" />
-    <logger name="jdbc.resultset" level="off" />
-    <logger name="jdbc.resultsettable" level="off" />
+    <logger name="jdbc.connection" level="off"/>
+    <logger name="jdbc.audit" level="off"/>
+    <logger name="jdbc.resultset" level="off"/>
+    <logger name="jdbc.resultsettable" level="off"/>
     <!-- 执行脚本前输出日志-不包含执行时间（sql执行失败时jdbc.sqltiming是不会输出的，可以使用jdbc.sqlonly来控制脚本输出。他俩一个是在执行sql前输出，一个是在执行sql后输出） -->
     <!-- 执行脚本前输出日志-不包含执行时间（sql执行失败时jdbc.sqltiming是不会输出的，可以使用jdbc.sqlonly来控制脚本输出。他俩一个是在执行sql前输出，一个是在执行sql后输出） -->
     <!-- 执行脚本前输出日志-不包含执行时间（sql执行失败时jdbc.sqltiming是不会输出的，可以使用jdbc.sqlonly来控制脚本输出。他俩一个是在执行sql前输出，一个是在执行sql后输出） -->
-<!--        <logger name="jdbc.sqlonly" level="debugger" additivity="false">-->
-<!--            <appender-ref ref="stdout"/>-->
-<!--            <appender-ref ref="FILE"/>-->
-<!--        </logger>-->
+        <logger name="jdbc.sqlonly" level="off" additivity="false">
+            <appender-ref ref="stdout"/>
+            <appender-ref ref="FILE"/>
+        </logger>
 
     <!-- 执行脚本后输出日志-包含执行时间 -->
     <logger name="jdbc.sqltiming" level="debugger" additivity="false">
@@ -85,7 +85,7 @@
         <appender-ref ref="FILE"/>
     </logger>
     <!-- log4jdbc相关配置 END -->
-
+    root
     <!-- 各应用通用配置 BEGIN -->
 
     <logger name="com.nagisazz" level="${LOG_LEVEL_COMMON}" additivity="false">
